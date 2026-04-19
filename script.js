@@ -111,24 +111,24 @@ function renderPlayers() {
     container.innerHTML = "";
 
     const order = ["sword", "nethpot", "diapot", "vanilla"];
-    const currentMode = state.mode;
 
     let filtered = players.filter(player =>
         player.name.toLowerCase().includes(state.search)
     );
 
     filtered.sort((a, b) => {
-        let aTier, bTier;
-
-        if (currentMode === "overall") {
-            aTier = getBestTier(a);
-            bTier = getBestTier(b);
-        } else {
-            aTier = String(a.tiers[currentMode] || "D").toUpperCase();
-            bTier = String(b.tiers[currentMode] || "D").toUpperCase();
+        if (state.mode === "overall") {
+            return (b.points || 0) - (a.points || 0);
         }
 
-        return tierRank[bTier] - tierRank[aTier];
+        let aTier = String(a.tiers[state.mode] || "D").toUpperCase();
+        let bTier = String(b.tiers[state.mode] || "D").toUpperCase();
+
+        if (tierRank[bTier] !== tierRank[aTier]) {
+            return tierRank[bTier] - tierRank[aTier];
+        }
+
+        return (b.points || 0) - (a.points || 0);
     });
 
     filtered.forEach((player, index) => {
