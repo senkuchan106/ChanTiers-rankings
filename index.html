@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChanTiers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="assets/logo/chantiersicon.png" alt="ChanTiers Logo">
+        <h1>ChanTiers</h1>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="about.html">About</a>
+        <a href="testing.html">Testing</a>
+        <a href="https://discord.gg/YOUR_LINK" target="_blank" class="discord-btn">Discord</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-title">
+        <img src="assets/logo/chantiersicon.png" alt="ChanTiers Large Logo">
+        <div class="hero-text">
+            <h2>ChanTiers</h2>
+            <p>Manually tested Minecraft PvP rankings. We also support cracked rankings.</p>
+        </div>
+    </div>
+
+    <div class="modes">
+        <button class="mode active" data-mode="overall">
+            <img src="assets/icons/overall.svg" alt="Overall"> Overall
+        </button>
+        <button class="mode" data-mode="sword">
+            <img src="assets/icons/sword.svg" alt="Sword"> Sword
+        </button>
+        <button class="mode" data-mode="nethpot">
+            <img src="assets/icons/nethpot.svg" alt="NethPot"> NethPot
+        </button>
+        <button class="mode" data-mode="diapot">
+            <img src="assets/icons/diapot.svg" alt="DiaPot"> DiaPot
+        </button>
+        <button class="mode" data-mode="vanilla">
+            <img src="assets/icons/vanilla.svg" alt="Vanilla"> Vanilla
+        </button>
+    </div>
+
+    <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Search username">
+        <button onclick="searchPlayer()">Search</button>
+    </div>
+</section>
+
+<section class="leaderboard">
+    <div class="lb-header">
+        <span>#</span>
+        <span>PLAYER</span>
+        <span>REGION</span>
+        <span>BEST TIERS</span>
+    </div>
+    <div id="players"></div>
+</section>
+
+<section id="adminPanel" style="display:none; margin:40px;">
+    <h2>Admin Panel</h2>
+
+    <input id="name" placeholder="Name"><br><br>
+    <input id="region" placeholder="Region"><br><br>
+
+    <input id="sword" placeholder="Sword Tier"><br><br>
+    <input id="nethpot" placeholder="NethPot Tier"><br><br>
+    <input id="diapot" placeholder="DiaPot Tier"><br><br>
+    <input id="vanilla" placeholder="Vanilla Tier"><br><br>
+
+    <button onclick="addPlayer()">Add Player</button>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
