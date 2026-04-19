@@ -333,3 +333,19 @@ async function updatePlayer(id, data) {
         console.error("Error updating player:", error);
     }
 }
+
+document.querySelectorAll("a").forEach(link => {
+    if (link.href && !link.target && !link.href.includes("#")) {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const href = this.href;
+
+            document.body.classList.remove("loaded");
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 400);
+        });
+    }
+});
