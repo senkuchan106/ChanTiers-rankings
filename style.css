@@ -289,8 +289,9 @@ nav {
     color: red;
 }
 
-.d {
-    color: #b5b5b5;
+.d, .dplus {
+    color: cyan;
+    font-weight: bold;
 }
 
 .u {
