@@ -206,12 +206,13 @@ function getTierClass(t) {
 
     const isPlus = tier.endsWith("+");
     const baseTier = isPlus ? tier[0] : tier;
+    const glowClass = isPlus ? "glow neon-plus" : "glow neon";
 
-    if (baseTier === "S") return `splus glow${isPlus ? " neon" : ""}`;
-    if (baseTier === "A") return `a glow${isPlus ? " neon" : ""}`;
-    if (baseTier === "B") return `b glow${isPlus ? " neon" : ""}`;
-    if (baseTier === "C") return `c glow${isPlus ? " neon" : ""}`;
-    if (baseTier === "D") return `d glow${isPlus ? " neon" : ""}`;
+    if (baseTier === "S") return `splus ${glowClass}`;
+    if (baseTier === "A") return `a ${glowClass}`;
+    if (baseTier === "B") return `b ${glowClass}`;
+    if (baseTier === "C") return `c ${glowClass}`;
+    if (baseTier === "D") return `d ${glowClass}`;
 
     return "";
 }
