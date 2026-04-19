@@ -349,3 +349,18 @@ document.querySelectorAll("a").forEach(link => {
         });
     }
 });
+
+async function updatePlayerCount() {
+    const snapshot = await fb.getDocs(
+        fb.collection(db, "players")
+    );
+
+    document.getElementById("playerCount").innerText =
+        snapshot.size + " Players Ranked";
+}
+
+window.onload = () => {
+    document.body.classList.add("loaded");
+    loadPlayers();
+    updatePlayerCount();
+};
