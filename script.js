@@ -22,36 +22,7 @@ const tierRank = {
 };
 
 /* DATA */
-let defaultPlayers = [
-    {
-        name: "_SenkuChan_",
-        sub: "Ranked Combatant",
-        points: 28,
-        region: "IND",
-        avatar: "https://mc-heads.net/avatar/Senku",
-        tiers: {
-            sword: "C",
-            nethpot: "C+",
-            diapot: "U",
-            vanilla: "B"
-        }
-    },
-    {
-        name: "TPTGamerz",
-        sub: "Ranked Combatant",
-        points: 4,
-        region: "IND",
-        avatar: "https://mc-heads.net/avatar/TPTGamerz",
-        tiers: {
-            sword: "U",
-            nethpot: "C",
-            diapot: "U",
-            vanilla: "U"
-        }
-    }
-];
-
-let players = JSON.parse(localStorage.getItem("players")) || defaultPlayers;
+let players = [];
 
 /* INIT */
 window.onload = () => {
@@ -92,8 +63,27 @@ window.onload = () => {
         });
     }
 
-    renderPlayers();
+    loadPlayers();
 };
+
+/* LOAD PLAYERS FROM FIREBASE */
+async function loadPlayers() {
+    try {
+        const snapshot = await fb.getDocs(
+            fb.collection(db, "players")
+        );
+
+        players = [];
+
+        snapshot.forEach(docSnap => {
+            players.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        renderPlayers();
+    } catch (error) {
+        console.error("Error loading players:", error);
+    }
+}
 
 /* SAFER BEST TIER */
 function getBestTier(player) {
@@ -123,27 +113,25 @@ function renderPlayers() {
     const order = ["sword", "nethpot", "diapot", "vanilla"];
     const currentMode = state.mode;
 
-    let filtered = players
-        .map((player, originalIndex) => ({ player, originalIndex }))
-        .filter(({ player }) =>
-            player.name.toLowerCase().includes(state.search)
-        );
+    let filtered = players.filter(player =>
+        player.name.toLowerCase().includes(state.search)
+    );
 
     filtered.sort((a, b) => {
         let aTier, bTier;
 
         if (currentMode === "overall") {
-            aTier = getBestTier(a.player);
-            bTier = getBestTier(b.player);
+            aTier = getBestTier(a);
+            bTier = getBestTier(b);
         } else {
-            aTier = String(a.player.tiers[currentMode] || "D").toUpperCase();
-            bTier = String(b.player.tiers[currentMode] || "D").toUpperCase();
+            aTier = String(a.tiers[currentMode] || "D").toUpperCase();
+            bTier = String(b.tiers[currentMode] || "D").toUpperCase();
         }
 
         return tierRank[bTier] - tierRank[aTier];
     });
 
-    filtered.forEach(({ player, originalIndex }, index) => {
+    filtered.forEach((player, index) => {
         let badgesHTML = "";
 
         if (state.mode === "overall") {
@@ -187,8 +175,8 @@ function renderPlayers() {
 
             ${adminUnlocked ? `
             <div class="admin-actions">
-                <button onclick="editPlayer(${originalIndex})">✏️</button>
-                <button onclick="deletePlayer(${originalIndex})">❌</button>
+                <button onclick="editPlayer('${player.id}')">✏️</button>
+                <button onclick="deletePlayer('${player.id}')">❌</button>
             </div>
             ` : ""}
         `;
@@ -229,7 +217,7 @@ function getTierClass(t) {
 }
 
 /* ADD PLAYER */
-function addPlayer() {
+async function addPlayer() {
     const name = document.getElementById("name").value.trim();
     const region = document.getElementById("region").value.trim();
 
@@ -252,10 +240,7 @@ function addPlayer() {
         }
     };
 
-    players.push(newPlayer);
-    localStorage.setItem("players", JSON.stringify(players));
-
-    renderPlayers();
+    await addPlayerToDB(newPlayer);
 
     document.getElementById("name").value = "";
     document.getElementById("region").value = "";
@@ -267,18 +252,36 @@ function addPlayer() {
     alert("Player added");
 }
 
+/* ADD PLAYER TO FIREBASE */
+async function addPlayerToDB(player) {
+    try {
+        await fb.addDoc(
+            fb.collection(db, "players"),
+            player
+        );
+
+        loadPlayers();
+    } catch (error) {
+        console.error("Error adding player:", error);
+    }
+}
+
 /* DELETE PLAYER */
-function deletePlayer(index) {
+async function deletePlayer(id) {
     if (!confirm("Delete this player?")) return;
 
-    players.splice(index, 1);
-    localStorage.setItem("players", JSON.stringify(players));
-    renderPlayers();
+    try {
+        await fb.deleteDoc(fb.doc(db, "players", id));
+        loadPlayers();
+    } catch (error) {
+        console.error("Error deleting player:", error);
+    }
 }
 
 /* EDIT PLAYER */
-function editPlayer(index) {
-    const p = players[index];
+async function editPlayer(id) {
+    const p = players.find(player => player.id === id);
+    if (!p) return;
 
     const name = prompt("Name:", p.name);
     if (!name) return;
@@ -305,7 +308,7 @@ function editPlayer(index) {
         ? p.sub.split("•")[0].trim()
         : (p.sub || "Ranked Combatant");
 
-    players[index] = {
+    await updatePlayer(id, {
         name: name.trim(),
         sub: role,
         points: points,
@@ -317,8 +320,15 @@ function editPlayer(index) {
             diapot: diapot.toUpperCase().trim() || "U",
             vanilla: vanilla.toUpperCase().trim() || "U"
         }
-    };
+    });
+}
 
-    localStorage.setItem("players", JSON.stringify(players));
-    renderPlayers();
+/* UPDATE PLAYER IN FIREBASE */
+async function updatePlayer(id, data) {
+    try {
+        await fb.updateDoc(fb.doc(db, "players", id), data);
+        loadPlayers();
+    } catch (error) {
+        console.error("Error updating player:", error);
+    }
 }
