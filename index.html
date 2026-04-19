@@ -79,6 +79,28 @@
     <button onclick="addPlayer()">Add Player</button>
 </section>
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLY9hZHaRxw2uThNcwW8b5r-oOhqAnGpk",
+        authDomain: "chantiers-ranking.firebaseapp.com",
+        projectId: "chantiers-ranking",
+        storageBucket: "chantiers-ranking.firebasestorage.app",
+        messagingSenderId: "1097374125731",
+        appId: "1:1097374125731:web:16e4893346cf94a513f916",
+        measurementId: "G-2GQLPHV003"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.db = db;
+    window.fb = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc };
+</script>
+
 <script src="script.js"></script>
 </body>
 </html>
+
