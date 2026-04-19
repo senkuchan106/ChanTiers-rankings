@@ -364,7 +364,15 @@ nav {
     font-weight: bold;
     color: #444;
 }
+@keyframes glowPulse {
+    0%   { text-shadow: 0 0 4px currentColor; }
+    50%  { text-shadow: 0 0 14px currentColor; }
+    100% { text-shadow: 0 0 4px currentColor; }
+}
 
+.glow {
+    animation: glowPulse 1.6s ease-in-out infinite;
+}
 .region {
     font-size: 13px;
     color: #888;
