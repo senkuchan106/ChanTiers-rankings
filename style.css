@@ -302,15 +302,22 @@ nav {
 
 /* GLOW EFFECTS */
 .glow {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.18);
 }
 
 .neon {
     box-shadow:
+        0 0 3px currentColor,
         0 0 6px currentColor,
-        0 0 12px currentColor,
-        0 0 22px currentColor,
-        0 0 34px currentColor;
+        0 0 10px currentColor;
+    filter: brightness(1.02);
+}
+
+.neon-plus {
+    box-shadow:
+        0 0 4px currentColor,
+        0 0 7px currentColor,
+        0 0 12px currentColor;
     filter: brightness(1.04);
 }
 
